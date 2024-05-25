@@ -18,7 +18,7 @@ passport.deserializeUser(async (id, done) => {
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/github/callback"
+    callbackURL: process.env.GITHUB_CALLBACK_URL,
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         let user = await User.findOne({ where: { githubId: profile.id } });
@@ -27,6 +27,7 @@ passport.use(new GitHubStrategy({
         } else {
             user = await User.create({
                 githubId: profile.id,
+                email: profile.emails[0].value,
                 username: profile.username,
                 displayName: profile.displayName,
                 accessToken: accessToken

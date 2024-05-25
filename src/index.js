@@ -1,23 +1,26 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const {Sequelize} = require('sequelize');
+const path = require("node:path");
+const {sequelize} = require('./models');
 require('dotenv').config();
 
 const app = express();
 
-// PostgreSQL connection
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'postgres',
-});
-
 // Middleware
 app.use(express.json());
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
 }));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.engine('ejs', require('ejs').renderFile);
+
+app.get('/', function (req, res) {
+  res.render('pages/index', {client_id: process.env.GITHUB_CLIENT_ID});
+});
 
 // Passport setup
 require('./passportConfig');
