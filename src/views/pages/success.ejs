@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <title>Github OAuth</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            padding-top: 70px;
+            background-color: #f8f9fa;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #343a40;
+            margin-right: 20px;
+        }
+
+        .jumbotron {
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .user-info {
+            font-size: 1.2rem;
+        }
+
+        .user-info strong {
+            color: #343a40;
+        }
+
+        .user-info p {
+            margin: 0;
+        }
+
+        .repo-list {
+            margin-top: 20px;
+        }
+
+        .repo-item {
+            margin-bottom: 10px;
+        }
+
+        .repo-description {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="text-primary text-center"><span class="fa fa-github"></span> GitHub Information</h1>
+        <div class="row align-items-center">
+            <div class="col-sm-2 text-center">
+                <img class="avatar" src="<%= userData.avatar %>" alt="User Avatar">
+            </div>
+            <div class="col-sm-10">
+                <div class="user-info">
+                    <p><strong>Username:</strong> <%= userData.username %></p>
+                    <p><strong>Name:</strong> <%= userData.displayName %></p>
+                    <p><strong>Email:</strong> <%= userData.email %></p>
+                    <p><strong>Url:</strong> <a href="<%= userData.url %>" target="_blank"><%= userData.url %></a></p>
+                    <p><strong>Location:</strong> <%= userData.location %></p>
+                    <p><strong>Bio:</strong> <%= userData.bio %></p>
+                </div>
+            </div>
+        </div>
+        <div class="repo-list">
+            <h3 class="text-center">Starred Repositories</h3>
+            <div class="row">
+                <% starredRepos.forEach(function(repo) { %>
+                    <div class="col-sm-6 repo-item">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= repo.name %></h5>
+                                <p class="card-text repo-description"><%= repo.description %></p>
+                                <p class="card-text"><strong>Owner:</strong> <a href="<%= repo.owner.html_url %>" target="_blank"><%= repo.owner.login %></a></p>
+                                <p class="card-text"><strong>Stargazers:</strong> <%= repo.stargazers_count %></p>
+                                <a href="<%= repo.html_url %>" class="btn btn-primary" target="_blank">View Repository</a>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
