@@ -1,25 +1,41 @@
-const axios = require('axios');
-const {User, Commit} = require('../models'); // Update Commit model to use Sequelize
+const {User, Commit} = require('../models');
+const GitHubClient = require("../clients/githubClient");
+const axios = require("axios");
 
-const fetchCommits = async () => {
-  const users = await User.findAll();
-  users.forEach(async (user) => {
-    const repos = await axios.get('https://api.github.com/user/starred', {
-      headers: {'Authorization': `token ${user.accessToken}`}
-    });
-    repos.data.forEach(async (repo) => {
-      const commits = await axios.get(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/commits`, {
-        headers: {'Authorization': `token ${user.accessToken}`}
-      });
-      commits.data.forEach(async (commit) => {
-        await Commit.create({
-          userId: user.id,
-          repoName: repo.name,
-          commitDate: commit.commit.author.date,
+async function fetchCommits() {
+    const users = await User.findAll();
+
+    for (const user of users) {
+        const gitHubService = new GitHubClient(user.accessToken);
+        const starredReposResponse = await axios.get('https://api.github.com/user/starred', {
+            headers: {'Authorization': `token ${user.accessToken}`}
         });
-      });
-    });
-  });
-};
+        const starredRepos = starredReposResponse.data;
+
+        for (const repo of starredRepos) {
+            console.log("Fetching commits for repo: ", repo.full_name);
+            const commits = await gitHubService.getRepoCommits(user.accessToken, repo.full_name);
+            console.log("Commits fetched: ", commits.length);
+
+            for (const commit of commits) {
+                // Check if commit already exists to avoid duplicates
+                const existingCommit = await Commit.findOne({
+                    where: {
+                        sha: commit.sha,
+                        repoName: repo.full_name
+                    }
+                });
+
+                if (!existingCommit) {
+                    await Commit.create({
+                        repoName: repo.full_name,
+                        sha: commit.sha,
+                        date: commit.date
+                    });
+                }
+            }
+        }
+    }
+}
 
 module.exports = fetchCommits;

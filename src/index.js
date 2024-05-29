@@ -4,22 +4,23 @@ const passport = require('passport');
 const path = require("node:path");
 const {sequelize} = require('./models');
 require('dotenv').config();
+require('./schedule');
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
 }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('ejs', require('ejs').renderFile);
 
 app.get('/', function (req, res) {
-  res.render('pages/index', {client_id: process.env.GITHUB_CLIENT_ID});
+    res.render('pages/index', {client_id: process.env.GITHUB_CLIENT_ID});
 });
 
 // Passport setup

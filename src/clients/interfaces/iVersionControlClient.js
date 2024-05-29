@@ -13,7 +13,7 @@ class IVersionControlClient {
     throw new Error("Method 'getStarredRepos()' must be implemented.");
   }
 
-  async getRepoCommits(accessToken, owner, repo) {
+  async getRepoCommits(accessToken, owner, repoFullName) {
     throw new Error("Method 'getRepoCommits()' must be implemented.");
   }
 }
