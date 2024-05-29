@@ -23,6 +23,8 @@ passport.use(new GitHubStrategy({
     try {
         let user = await User.findOne({ where: { githubId: profile.id } });
         if (user) {
+            user.accessToken = accessToken;
+            await user.save();
             done(null, user);
         } else {
             user = await User.create({

@@ -83,9 +83,47 @@
                                 <p class="card-text"><strong>Owner:</strong> <a href="<%= repo.owner.html_url %>" target="_blank"><%= repo.owner.login %></a></p>
                                 <p class="card-text"><strong>Stargazers:</strong> <%= repo.stargazers_count %></p>
                                 <a href="<%= repo.html_url %>" class="btn btn-primary" target="_blank">View Repository</a>
+                                <!-- Add canvas for the chart -->
+                                <canvas id="commitChart-<%= repo.full_name %>" width="400" height="200"></canvas>
                             </div>
                         </div>
                     </div>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+                    <script>
+                        var ctx = document.getElementById('commitChart-<%= repo.full_name %>').getContext('2d');
+                        var dates = '<%= repo.commitDates %>'.split(',');
+                        var commitCounts = '<%= repo.commitCounts %>'.split(',').map(Number);
+
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: dates,
+                                datasets: [{
+                                    label: 'Commits',
+                                    data: commitCounts,
+                                    fill: false,
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    tension: 0.1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    x: {
+                                        type: 'time',
+                                        time: {
+                                            unit: 'day'
+                                        }
+                                    },
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
                 <% }); %>
             </div>
         </div>
