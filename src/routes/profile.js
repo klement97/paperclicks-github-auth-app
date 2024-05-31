@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {User, Commit} = require('../models');
 const GitHubClient = require('../clients/githubClient');
-const {Sequelize, cast} = require("sequelize");
+const {Sequelize} = require("sequelize");
 const githubClient = new GitHubClient()
 
 
@@ -73,7 +73,6 @@ router.get('/', ensureAuthenticated, async (req, res) => {
                     stargazers_count: repo.stargazers_count,
                     commitDates: repo.commitDates,
                     commitCounts: repo.commitCounts,
-                    
                 }
             })
         });

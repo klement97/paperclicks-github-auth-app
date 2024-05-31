@@ -24,7 +24,7 @@ app.get('/', function (req, res) {
 });
 
 // Passport setup
-require('./passportConfig');
+require('./config/passportConfig');
 app.use(passport.initialize());
 app.use(passport.session({}));
 
