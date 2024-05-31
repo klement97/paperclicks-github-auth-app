@@ -32,6 +32,11 @@ cp .env.example .env
 docker compose up
 ```
 
+5. Run the migrations
+```bash
+docker exec paperclicks-github-auth-app-server-1 npm run migrate
+```
+
 ## Usage
 
 After completing the setup, you can visit `http://localhost:3000` in your web browser to interact with the application.
