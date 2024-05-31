@@ -3,14 +3,14 @@
     "username": "postgres",
     "password": "postgres",
     "database": "github_oauth",
-    "host": "127.0.0.1",
+    "host": "db",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": "postgres",
     "database": "test_github_oauth",
-    "host": "127.0.0.1",
+    "host": "db",
     "dialect": "postgres"
   },
   "production": {
