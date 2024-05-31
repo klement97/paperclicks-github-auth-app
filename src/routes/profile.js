@@ -3,14 +3,14 @@ const router = express.Router();
 const {User, Commit} = require('../models');
 const GitHubClient = require('../clients/githubClient');
 const {Sequelize} = require("sequelize");
-const githubClient = new GitHubClient()
 
 
 router.get('/', ensureAuthenticated, async (req, res) => {
     try {
         const user = await User.findByPk(req.user.id);
-        const userData = await githubClient.getUserProfile(user.accessToken);
-        const starredRepos = await githubClient.getStarredRepos(user.accessToken);
+        const githubClient = new GitHubClient(user.accessToken);
+        const userData = await githubClient.getUserProfile();
+        const starredRepos = await githubClient.getStarredRepos();
         const commits = await Commit.findAll({
             attributes: [
                 'repoName',

@@ -3,15 +3,16 @@ const axios = require("axios");
 
 class GitHubClient extends IVersionControlClient {
 
-  constructor() {
+  constructor(accessToken) {
     super();
-    this.baseURL = "https://api.github.com";
+    this.accessToken = accessToken;
+    this.baseURL = process.env.GITHUB_API_URL;
   }
 
-  async getUserProfile(accessToken) {
+  async getUserProfile() {
     try {
       const response = await axios.get(`${this.baseURL}/user`, {
-        headers: {'Authorization': `token ${accessToken}`}
+        headers: {'Authorization': `token ${this.accessToken}`}
       });
       return response.data;
     } catch (error) {
@@ -20,10 +21,10 @@ class GitHubClient extends IVersionControlClient {
   }
 
 
-  async getStarredRepos(accessToken) {
+  async getStarredRepos() {
     try {
       const response = await axios.get(`${this.baseURL}/user/starred`, {
-        headers: {'Authorization': `token ${accessToken}`}
+        headers: {'Authorization': `token ${this.accessToken}`}
       });
       return response.data;
     } catch (error) {
@@ -32,11 +33,11 @@ class GitHubClient extends IVersionControlClient {
   }
 
 
-  async getRepoCommits(accessToken, repoFullName) {
+  async getRepoCommits(repoFullName) {
     try {
       const url = `${this.baseURL}/repos/${repoFullName}/commits`;
       const response = await axios.get(url, {
-        headers: { 'Authorization': `token ${accessToken}` }
+        headers: { 'Authorization': `token ${this.accessToken}` }
       });
       return response.data.map(commit => ({
         sha: commit.sha,
