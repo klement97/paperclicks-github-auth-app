@@ -3,7 +3,7 @@ const fetchCommits = require('./background/fetchCommits');
 
 
 // Schedule the task to run every day at midnight
-cron.schedule('0 0 * * *', () => {
+cron.schedule('* * * * *', () => {
     console.log('Fetching commits...');
     fetchCommits().then(() => {
         console.log('Commits data fetched and stored successfully');
